@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>初识jQuery</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        #id {
+            color: brown;
+            width: 200px;
+            margin: 0 auto;
+        }
+        #btn {
+            display: block;
+            margin: 0 auto;
+        }
+        ul {
+            list-style-type: none;
+            margin: 100px auto;
+        }
+
+        .parentWrap {
+            width: 250px;
+            text-align: center;
+        }
+
+        .menuGroup {
+            border: 1px solid #8FBAF3;
+            background-color: #BDF1F6;
+            margin-top: -1px;
+        }
+        table {
+            margin: 0 auto;
+        }
+        .groupTitle {
+            display: block;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            border-bottom: 1px solid #77628C;
+            cursor: pointer;
+        }
+
+        .menuGroup>div {
+            height: 200px;
+            background-color: #F2FCFC;
+            display: none;
+        }
+        .center {
+            text-align: center;
+        }
+        .go-top {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            width: 60px;
+        }
+        .go-top img {
+            width: 100%;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="id">ID选择器</div>
+    <button id='btn'>执行一系列操作</button>
+    <div class="arrow"></div>
+    <!-- html 部分 -->
+    <ul class="parentWrap">
+        <li class="menuGroup">
+            <span class="groupTitle">标题1</span>
+            <div>我是弹出来的div1</div>
+        </li>
+        <li class="menuGroup">
+            <span class="groupTitle">标题2</span>
+            <div>我是弹出来的div2</div>
+        </li>
+        <li class="menuGroup">
+            <span class="groupTitle">标题3</span>
+            <div>我是弹出来的div3</div>
+        </li>
+        <li class="menuGroup">
+            <span class="groupTitle">标题4</span>
+            <div>我是弹出来的div4</div>
+        </li>
+    </ul>
+
+    <div class="center">
+        <h2>我是wrap1</h2>
+        <ul class="wrap1">
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+        </ul>
+        <h2>我是wrap2</h2>
+        <ul class="wrap2">
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+            <li><a href="#">这是内容</a></li>
+        </ul>
+    </div>
+
+    <!-- html 部分 -->
+    <div class="wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        <input id="check_all" type="checkbox" title="全选">
+                    </th>
+                    <th>英雄</th>
+                    <th>技能</th>
+                </tr>
+            </thead>
+            <tbody id="check_dan">
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>芈月</td>
+                    <td>永生之血</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>貂蝉</td>
+                    <td>语·花印</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>大乔</td>
+                    <td>川流不息</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>甄姬</td>
+                    <td>凝泪成冰</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="go-top">
+        <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABZCAYAAAC+PDOsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkMwMTgyRTAwQTc4NDExRThCNzREQTA5QUQyN0Y0Mjk1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkMwMTgyRTAxQTc4NDExRThCNzREQTA5QUQyN0Y0Mjk1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QzAxODJERkVBNzg0MTFFOEI3NERBMDlBRDI3RjQyOTUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QzAxODJERkZBNzg0MTFFOEI3NERBMDlBRDI3RjQyOTUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7GtVrwAAAICElEQVR42uyd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'></img>
+    </div>
+    <!-- 'write less, do more' -->
+    <script src="./lib/jquery-1.12.4.js"></script>
+
+    <script>
+        // jQuery可以放在body中也可以放在head中，因为jQuery是等页面加载完成后才执行的 script标签放在body中，所有标签后。
+        // 因为js是单线程的遇到script标签会先解析标签里面的内容，放在后面是为了让html代码先执行出来，避免因为js过大导致页面加载慢 显示空白的问题，所以放到后面可以提高用户体验
+        // 1.入口函数 两种写法
+        $(document).ready(function () {
+            console.log(document);
+            console.log($(document)); // 获取到的是一个伪数组 可以遍历
+            console.log($(document)[0] ===
+            document); // jquery对象和dom对象的转换 DOM(Document Object Model，文档对象模型)，每一份DOM都可以表示成一棵树。 是通过jQuery包装DOM对象后产生的对象
+            console.log($(document).get(0) === document);
+            // DOM对象转成jQ对象：DOM对象转成jQ对象的十分简单，只需要用$()把DOM对象包裹起来就是一个jQ对象了。转换之后就可以任意使用jQ的方法了。用钱买 $()
+        })
+        $(function () {
+            // ...code
+        })
+
+        // 2.选择器
+        // 2.1 基本选择器
+        // $('#id')             获取指定ID的元素
+        // $('.class') 	        获取所有同一类class的所有元素
+        // $('span') 	        获取同一类标签的所有元素
+        // $('div,p,li')        使用逗号分隔，只要符合条件之一就可
+        // $('div.redClass')    获取class为redClass的div元素
+
+        // 2.2 层级选择器
+        // $('ul>li')           子代选择器 使用>号，获取儿子层级的元素，注意，并不会获取孙子层级的元素  $(xxx).children()
+        // $('ul li')           后代选择器 使用空格，代表后代选择器，获取ul下的所有li元素，包括孙子等   $(xxx).find()
+
+        // 2.3过滤选择器 
+        // 过滤选择器主要是通过特定的过滤规则来筛选出所需的DOM元素，过滤规则与css中的伪类选择器语法相同。
+        // 即选择器都以一个冒号‘:’开头。按照不同的过滤规则，过滤选择器可以分为：基本过滤、内容过滤、可见性过滤、属性过滤、子元素过滤和表单对象属性过滤选择器。
+        // 2.3.1 基本过滤选择器
+        // :first	            $('div:first')	                        选取所有div元素中，第一个div元素
+        // :last	            $('div:last')	                        选取所有div元素中，最后一个div元素
+        // :eq(index)	        $('li:eq(2)')	                        选取所有li元素中，索引号为2的元素，index从0开始  $(xxx).eq()
+        // :even	            $('li:even')	                        选取所有li元素中，索引号为偶数的元素
+        // :odd	                $('li:odd')	                            选取所有li元素中，索引号为奇数的元素
+        // :not(selector)	    $('div:not(.box)')	                    选取所有div元素中，不是.box的div元素
+        // :gt(index)	        $('li:gt(1)')	                        选取所有li元素中，索引号大于1的元素，index从0开始
+        // :lt(index)	        $('li:lt(5)')	                        选取所有li元素中，索引号小于5的元素，index从0开始
+        // :header          	$(':header')	                        选取所有标题元素,<h1>、<h2>、<h3>...
+        // :animated	        $('div:animated')	                    选取正在执行动画的div元素
+        // :focus	            $(':focus')	                            选取当前获取焦点的元素
+        // 2.3.2 内容过滤选择器             
+        // :contains(text)	    $('div:contains("我")')	                选取含有文本“我”的 所有div元素
+        // :empty	            $('div:empty')	                        选取不包含子元素或者文本的空div元素
+        // :has(selector)	    $('div:has(p)')	                        选取含有p元素的div元素
+        // :parent	            $('div:parent')	                        选取含有子元素或者文本的div元素
+        // 2.3.3 可见性过滤选择器               
+        // :hidden	            $(':hidden')	                        选取所有不可见的元素 display:none、visibility:hidden等
+        // :visible	            $('div:visible')	                    选取所有可见的div元素
+        // 2.3.4 属性过滤选择器             
+        // [attribute]	        $('div[id]')	                        选取拥有属性id的div元素
+        // [attribute = value]	$('div[title=test]')	                选取属性title为"test"的div元素
+        // 2.3.5 子元素过滤选择器               
+        // :first-child	        $('ul li:first-child')	                选取每个ul中第一个li元素
+        // :last-child	        $('ul li:last-child')	                选取每个ul中最后一个li元素
+        // :nth-child(index/even/odd)	$('ul li:nth-child(index)')	    选取每个ul中第index个li元素
+        // :only-child	        $('ul li:only-child')	                选取每个ul中是唯一子元素的li元素
+        // 2.3.6 表单对象属性过滤选择器
+        // :enabled	            $('#form:enabled')	                    选取id名为“form”的表单内所有可用元素
+        // :disabled	        $('#form:disabled')	                    选取id名为“form”的表单内所有不可用元素
+        // :checked	            $('input:checked')	                    选取所有被选中的input元素(单选框、复选框)
+        // :selected	        $('select option:selected')	            选取所有被选中的选项元素
+
+        // 2.4 表单选择器
+        // :input	            $(':input')	                            选取所有input、textarea、select、button元素
+        // :text	            $(':text')	                            选取所有的单行文本框
+        // :password	        $(':password')	                        选取所有的密码框
+        // :radio	            $(':radio')	                            选取所有的单选框
+        // :checkbox	        $(':checkbox')	                        选取所有的复选框
+        // :submit	            $(':submit')	                        选取所有的提交按钮
+        // :image	            $(':image')	                            选取所有的图像按钮
+        // :button	            $(':button')	                        选取所有的按钮
+        // :file	            $(':file')	                            选取所有的上传域
+        // :hidden	            $(':hidden')	                        选取所有的不可见元素 
+        // 例如：想要得到获取的个数直接使用：.length方法：$('#form :input').length; // 获得页面中表单元素的个数
+
+        // 2.5 筛选选择器  筛选选择器的功能与过滤选择器有点类似，但是用法不一样，筛选选择器主要是方法。
+        // children(selector)	$('ul').children('li')	                相当于$(“ul>li”)，子类选择器
+        // find(selector)	    $('ul').find('li');	                    相当于$(“ul li”),后代选择器
+        // siblings(selector)	$('#first').siblings('li');	            查找兄弟节点，不包括自己本身。
+        // parent()	            $('#first').parent();	                查找父亲
+        // eq(index)	        $('li').eq(2);	                        相当于$(“li:eq(2)”),index从0开始
+        // index()              $(this).index()                         获取的是指定元素相对于其他指定元素的 index 位置
+        // next()	            $('li').next()	                        找下一个兄弟
+        // prev()	            $('li').prev()	                        找上一次兄弟
+        $(function () {
+            $("#id").css('width', '100px');
+            console.log($("#id").css('width')); // 带单位
+            console.log($("#id").width()); // 设置或返回当前匹配元素的宽度 返回第一个匹配元素的宽度
+            $('#id').css({ // 以对象的形式设置多个样式值
+                'background-color': 'cyan',
+                fontSize: 28
+            })
+        })
+
+        $(function () {  
+            // 当前点击的span元素的兄弟元素显示 
+            // 它的父级元素的兄弟元素的子元素div隐藏
+            $('.groupTitle').click(function () {  
+                $(this).next().show().parent().siblings().children('div').hide()
+                // $(this).next().show().parent().siblings().find('div').hide()
+                // $(this).next().slideDown().parent().siblings().find('div').slideUp()
+                // $(this).next().fadeIn().parent().siblings().find('div').fadeOut()
+            })
+
+            // 在jQ中，不需要for循环遍历，因为jQ自己会进行遍历，这在jQ里面就叫隐式迭代。
+            $('.wrap1 li').click(function () {  
+                console.log($(this).index());
+            })
+            $('.wrap2 li a').click(function () {  
+                console.log($(this).index());
+            })
+            // 总结： index()方法获取的是当前元素在他兄弟元素里面的下标 相对于他的兄弟元素的 （如果没有其兄弟元素 则下标为0）
+        })
+
+        // 3.添加节点 创建节点并且把新创建的元素添加到文档中
+        // append()	         $('ul').append('<li>上海1</li>')	        在ul子元素的最后面依次添加li
+        // appendTo()	     $('<li>上海2</li>').appendTo('ul')	        将li添加到ul子元素的最后面，参数与append正好颠倒过来
+        // prepend()	     $('ul').prepend('<li>北京1</li>')	        在ul子元素的最前面依次添加li
+        // prependTo()	     $('<li>北京2</li>').prependTo('ul')	    将li添加到ul子元素的最前面，参数与prepend正好颠倒过来
+        // after()	         $('ul').after('<h2>哈哈哈1</h2>')	        在ul的后面添加h2(兄弟元素)
+        // insertAfter()	 $('<h2>哈哈哈2</h2>').insertAfter('ul')	将h2添加到ul的后面，参数与after正好颠倒过来
+        // before()	         $('ul').before('<h2>城市1</h2>')	        在ul的前面添加h2(兄弟元素)
+        // insertBefore()	 $('<h2>城市2</h2>').insertBefore('ul')	    将h2添加到ul的前面，参数与before正好颠倒过来
+
+        // 4.删除节点
+        // 如果文档中某一个元素多余的时候，那么就应该将其删除。jQuery提供了三种删除节点的方法：remove()，detach()，empty()。
+        // 从DOM中删除所有匹配的元素，当某个节点用remove()方法删除之后，该节点包含的所有后代节点将同时被删除，并且返回值就是该删除的节点。(点击事件等会被移除)
+        // detach()方法和remove()一样，也是从DOM中，去掉所有匹配的元素。但是这个方法不会把匹配的元素从jQuery对象中删除，就是说所有绑定的事件、附加的数据都会保留下来。
+        // empty方法不是删除节点，准确的说，它是清空节点，它能清除匹配元素中的所有后代节点和内容。empty是清空匹配项的内容，不管里面是文本还是有其它标签，都会被清空，但是匹配项的标签还会保留，不会被清空
+
+        // 5.克隆节点
+        // 克隆节点也是常用的DOM操作之一，它是通过clone()方法实现的，同样的，它也有深拷贝和浅拷贝。深拷贝和浅拷贝的区别就是，深拷贝会复制绑定的事件，而浅拷贝不会。
+        // 实现原理很简单，只要clone(true)，加上true，就是深拷贝，默认不传或者传false就是浅拷贝。
+
+        // 6.替换节点
+        // 如果要替换某个节点，jQuery提供了两个方法，即replaceWith()和replaceAll()。
+        // replaceWith()方法是将所有匹配的元素替换成指定的HTML或DOM，replaceAll()方法的作用与replaceWith()方法的作用一模一样，只是颠倒了参数。
+
+        // 7.包裹节点
+        // wrap()	            $('h3').wrap('<i></i>')	                将所有的h3标签单独用i标签包裹起来
+        // wrapAll()	        $('h3').wrapAll('<i></i>')	            将所有的h3标签全部包裹在i标签内
+        // wrapInner()	        $('h3').wrapInner('<i></i>')	        将h3标签里面的子内容(包括文本节点)用i标签包裹起来
+
+        // 8.遍历节点
+        // children()方法：该方法用于获得匹配元素的子元素的集合。children()方法只能考虑子元素，后代元素不考虑。(后代元素可用find())
+        // next()方法用于获得匹配元素后面紧邻的同级元素。nextAll()方法用于获得匹配元素后面所有的同级元素。
+        // prev()方法用于获得匹配元素前面紧邻的同级元素。prevAll()方法用于获得匹配元素前面所有的同级元素。
+        // siblings()方法：该方法用于匹配元素前后所有的兄弟元素。
+        // parent()方法是获得匹配元素的父级元素。parents()方法获取的是匹配元素的祖先元素。(祖先是父、祖父、曾祖父，依此类推。)
+
+        // 9.属性操作  用attr()方法来获取和设置元素属性，removeAttr()方法来删除元素属性。
+        // 设置单个属性 attr('title','女星'))  如果想要设置多个属性，参数就是一个json对象。attr({'title':'老师','name':'苍井空'})
+        // 移除单个属性 removeAttr('title');   移除多个属性  removeAttr('title name');
+        // 在jQ中，有很多方法都是同一个函数既能实现获取值，又能实现设置值，除了attr方法类似的还有：html()、text()、height()、width()、val()、css()等方法。
+        // 对于checked、selected、disabled这类boolean类型的属性来说，不能用attr方法，只能用prop方法。
+        $(function () {  
+            // 添加子元素
+            $('#btn').click(function () {  
+                $('.wrap1').append('<li>这是添加的最新子内容</li>')
+                $('.wrap1').after('<li>这是添加的最新的兄弟内容</li>')
+            })
+        })
+
+        $(function () {
+            // 点击上面的按钮 控制下面的按钮全选
+            $('#check_all').click(function () {
+                var $status = $(this).prop('checked');
+                $('#check_dan input').prop('checked',$status)
+            })
+            // 点击下面的按钮 全选了控制上面的按钮
+            $('#check_dan input').click(function() {
+                // 获取下面所有被选中的按钮个数
+                var $selectedL = $('#check_dan input:checked').length
+                var $selectedA = $('#check_dan input').length
+                // if ($selectedL === $selectedA) {
+                //     $('#check_all').prop('checked',true)
+                // } else {
+                //     $('#check_all').prop('checked',false)
+                // }
+                $('#check_all').prop('checked',$selectedL === $selectedA)
+            })
+        })
+
+        // 10.样式操作 通过css()的方法设置或者获取样式，无论样式属性是从外部导入的，还是直接写在HTML标签里面的，css()方法都可以获取到。
+        // 因为class是标签的一个属性，所以可以用上面attr()获取属性的方法获取到它 也可以设置 但是结果是替换这个类名
+        // 添加样式类 addClass() 
+        // 当一个类中有多个类名，想要移除其中某个的时候，可以使用removeClass(neme)方法，name就是要移除的类名。也可以同时移除多个类removeClass(neme1 name2)，中间用空格隔开。当removeClass()不传参数的时候，就会将class的值全部删除。
+        // toggleClass()方法控制样式上的重复切换。如果类名存在则删除它，如果类名不存在则添加它。
+        // hasClass(name)用来判断是否包含一个类，name为需要判断的类名。返回值为true或false。
+        // 如何获取一个元素的高？ $(element).css("height"); 在jQ中，还有一个height()方法，可以获取元素计算后的高度：$('p').height(); // 获取 p 元素的高度值
+        
+        // 11.定位相关
+        // offset()方法 它的作用是获取元素在当前视窗的相对偏移其中返回的对象包含两个属性，即top和left。
+        // position()方法 它的作用是获取元素相对于最近的一个position样式属性设置为relative或者absolute的祖先节点的相对偏移，与offset()一样，它返回的对象也包括两个属性，即top 和 left。
+        // scrollTop()方法和scrollLeft()方法 这两个方法分别是获取元素滚动条距离顶端距离，和左侧的距离。
+        // var $scrollTop = $('p').scrollTop();  // 获取元素的滚动条距顶端的距离
+        // var $scrollLeft = $('p').scrollLeft();  // 获取元素的滚动条距左侧的距离
+
+        $(function () {  
+            // 监听scroll的距离
+            $(window).scroll(function () { 
+                if($(window).scrollTop() >= 200) { 
+                    $('.go-top img').stop().fadeIn(300) 
+                    // $('.go-top img').css('display','block') 
+                } else {
+                    $('.go-top img').stop().fadeOut(200) 
+                    // $('.go-top img').css('display','none') 
+                }
+            })
+            // 点击回到顶部
+            $('.go-top img').click(function () {  
+                // 逗号隔开 满足条件之一即可
+                $('html,body').stop().animate({
+                    scrollTop: 0
+                },1000)
+            })
+        })
+
+        // 12.设置和获取HTML、文本和值
+        // html()用法其实类似于javascript中的innerHTML属性，可以用来设置或者读取某个元素中的HTML内容。
+        // text()用法其实类似于javascript中的innerText属性，可以用来设置或者读取某个元素中的文本内容。
+        // val()用法类似于Javascript中的value属性，可以用来获取或者设置元素的值。无论元素是文本框还是单选框、下拉列表，他都可以返回元素的值。如果元素是多选，则包含一个包含所有选择的值的数组。
+    </script>
+</body>
+
+</html>
