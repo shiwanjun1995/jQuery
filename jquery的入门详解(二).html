@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>初识jQuery</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .hide {
+            border: 3px solid #f40;
+            display: none;
+        }
+        .box {
+            width: 300px;
+            height: 300px;
+            background-color: skyblue;
+        }
+        .box1 {
+            width: 200px;
+            height: 200px;
+            background-color: limegreen;
+            margin: 40px;
+        }
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: lightseagreen;
+            margin: 40px;
+        }
+        #box {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            background: aquamarine;
+        }
+    </style>
+</head>
+<body>
+    <!-- html 部分 -->
+    <h2>什么是相对论？</h2>
+    <div class="hide">
+        <p>相对论是关于时空和引力的基本理论，主要由阿尔伯特·爱因斯坦创立，依据研究的对象不同分为狭义相对论和广义相对论。相对论的基本假设是相对性原理，即物理定律与参照系的选择无关。</p>
+        <p>狭义相对论和广义相对的区别是，前者讨论的是匀速直线运动的参照系（惯性参照系）之间的物理定律，后者则推广到具有加速度的参照系中（非惯性系），并在等效原理的假设下，广泛应用于引力场中。相对论极大地改变了人类对宇宙和自然的“常识性”观念，提出了“同时的相对性”、“四维时空”、“弯曲时空”等全新的概念。它发展了牛顿力学，推动物理学发展到一个新的高度。</p>
+        <p>狭义相对性原理是相对论的两个基本假定，在目前实验的观测下，物体的运动与相对论是吻合很好的，所以目前普遍认为相对论是正确的理论。</p>
+    </div>
+    <!-- html 部分 -->
+    <div class="box">
+        <p>提示信息</p>
+        <div class="box1">
+            <p>提示信息</p>
+            <div class="box2">
+                <p>提示信息</p>
+            </div>
+        </div>
+    </div>
+    <input type="text" placeholder="锁定" id="iptOne">
+    <input type="text" placeholder="锁定" id="iptTwo">
+    <div class="onevent">
+        <p>111111</p>
+        <p>111111</p>
+        <p>111111</p>
+        <p>111111</p>
+        <i>123456</i>
+    </div>
+    <div id="box"></div>
+    <button id='btn'>按钮</button>
+    <div id="btn3">
+        <p>这是一些内容</p>
+    </div>
+    <script src="./lib/jquery-1.12.4.js"></script>
+    <script>
+        // 1.DOM加载
+        // window.onload()方法是等到页面中所有元素加载完毕之后，才执行 (图片一多 加载的时间就很长)
+        // 而jQuery使用$(document).ready()方法，可以在DOM载入就绪时就对其进行操纵并调用执行它所绑定的函数。也就是说在jQ中，不需要等待所有图片加载完再执行。(可能会获取不到图片宽高)
+        window.onload = function () {  
+            // ...code
+        }
+        $(window).load(function () {  
+            // ...code 这个处理函数绑定给window对象则会在所有内容加载完毕之后触发
+        })
+
+        // 2.事件绑定&&事件解绑
+        // 在文档装载完成之后，如果打算为元素绑定事件来完成某些操作，则可以使用bind()方法，bind()方法的调用格式为：bind(type [, data] ,fn);
+        // 当我们想要移除一个事件的时候，可以使用unbind()方法。unbind([type].[data]);
+        $(function () {  
+            $('h2').bind('click',function () {  
+                var $content = $(this).next()
+                // is 方法 可以对元素的状态进行判断
+                if($content.is(':visible')) {
+                    $content.hide()
+                } else {
+                    $content.show()
+                }
+            })
+        })
+
+        // 3.事件冒泡 简单来说，就是一个元素包含另一个元素，两个元素同时绑定了点击事件，当我点击里面元素的时候，会同时触发两个事件函数，这就是事件冒泡。
+        $(function () {  
+            $('.box').click(function (e) {  
+                $(this).children('p').text("box被触发了")
+                // 阻止事件冒泡
+                e.stopPropagation();
+            })
+            $('.box1').click(function (e) {  
+                $(this).children('p').text("box1被触发了")
+                e.stopPropagation();
+            })
+            $('.box2').click(function (e) {  
+                $(this).children('p').text("box2被触发了")
+                e.stopPropagation();
+            })
+        })
+
+        // 4.阻止默认行为 a标签点击跳转 submit点击提交 e.preventDefault();         // 阻止默认行为
+        // 注意：如果想要同时对事件停止冒泡和阻止默认行为，可以有一种默认的简写方式：return false。
+
+        // 5.事件对象的属性
+        // event.type：该方法可以获取到事件的类型
+        $(function () {  
+            $("a").click(function(event){
+                console.log(event.type);    // 打印a标签点击之后的事件类型  打印 ==> click
+                return false;           // 阻止a标签默认跳转事件
+            });
+        })
+        // event.stopPropagation()方法： 该方法是阻止事件冒泡。
+        // event.preventDefault()方法： 该方法是阻止事件默认行为。
+        // event.target：该方法的作用是获取到触发事件的元素。
+        // event.pageX 和 event.pageY：该方法的作用，是分别获取到光标相对于页面的x坐标和y坐标，如果页面上有滚动条的话，还要加上滚动条的宽度和高度。
+        // event.which：该方法的作用是在鼠标单击事件中获取到鼠标的左、中、右键；在键盘事件中获取键盘的按键。
+        $(function () {  
+            $("a").click(function(event){
+                console.log(event.target);    // 打印 ==> a
+                return false;                 // 阻止a标签默认跳转事件
+            });
+        })
+
+        // 6.模拟操作 模拟操作就是可以自动触发click，而不需要用户主动点击。
+        $(function () {  
+            // 不仅会触发元素绑定的focus事件，也会使input元素本身得到焦点(这就是浏览器的默认操作)。
+            $('#iptOne').trigger('focus');
+            // 如果你只想触发绑定的focus事件，而不想执行浏览器默认操作，可以使用triggerHandler()方法。
+            $('#iptTwo').triggerHandler('focus');
+        })
+
+        // 7.事件委托 on()方法既可以注册事件，还可以注册委托事件。动态添加li元素的时候，这些li是没有点击事件的。但是这些只要讲点击事件交给父元素来执行，就能实现了。
+        // $(element).on(type,[selector],fn);
+        // type：字符串，事件类型，如：click、mouseover...；
+        // selector：可选，字符串，用于过滤出被选中的元素中能触发事件的后代元素。如果选择器是 null 或者忽略了该选择器，那么被选中的元素总是能触发事件；
+        // fn：事件被触发执行的函数。
+
+        // delegate只能注册委托事件。$(fatheElement).delegate(selector,type,fn);
+        // fatheElement：父元素；
+        // selector：可选，字符串，用于过滤出被选中的元素中能触发事件的后代元素。如果选择器是 null 或者忽略了该选择器，那么被选中的元素总是能触发事件；
+        // type：事件类型；
+        // fn：事件被触发执行的函数。
+        $(function () { 
+            // p自己注册的点击事件 
+            $('.onevent p').click(function () {  
+                alert("p的点击事件");
+            })
+            //给div自己执行的
+            $('.onevent').click(function () {  
+                alert("div的点击事件");
+            })
+            //给div里面的p执行 委托事件
+            $('.onevent').on('click', 'p', function () {  
+                alert("div里面的p的点击事件");
+            })
+            // 注意：在执行顺序上 会先执行自己的事件 随后执行绑定的事件 最后执行父元素的事件  当第二个参数传进去的时候，就想当于给过滤的元素注册委托事件。
+        })
+
+        // 8.jquery动画 
+        // 元素的显示与隐藏 show() hide() 参数可加上时间 下面的代码表示的是，元素在600ms内显示出来：$('element').show(600); 一般不加时间 因为 元素的宽、高和不透明度都是在慢慢增加或者减小的
+        // fadeIn和fadeOut方法只改变元素的不透明度，不会去改变宽高。淡入 淡出的效果 
+        // slideUp()方法和slideDown()方法只会改变元素的高度，如果一个元素的display属性值为“none”，调用slideDown()方法的时候元素由上至下延伸显示。slideUp()正好相反，元素将由下到上缩短隐藏。
+        // 前面几种类型动画，比较单一，很多时候不能满足于用户的需求，但是在jQ中还有一个自定义动画animate，非常强大 animate(params,speed,easing,callback);
+        // params：一个包含样式和值的对象，比如{p1:"val1",p2:"val2",...}；
+        // speed：动画执行速度(可选)，默认400；
+        // easing：表示过度使用哪种缓动函数(默认swing，jQ内部还支持一个linear)
+        // callback：在动画执行完之后，执行的函数(可选)。
+        
+        // toggle()方法可以切换元素的可见状态，如果元素是可见的，则切换为隐藏。如果元素是隐藏的，则切换为可见。
+        // slideToggle()方法：通过高度变化来切换匹配元素的可见性。
+        // fadeTo()方法可以将不透明度设置到指定的值。
+        // fadeToggle()方法：fadeToggle()方法可以切换不透明度。
+        $('#btn3').click(function() {
+            $(this).children().fadeTo(600, 0.5);  // 600表示的是执行时间 0.5 表示目标值
+        });
+        $(function () {  
+            // 普通动画
+            // $('#box').animate({left:'600px'},2000)
+            // $('#btn').on('click',function () {  
+            //     $('#box').animate({left:'600px'},2000)
+            // })
+
+            // 通过累加一个值让元素从当前位置，累加到900的位置
+            $('#btn').click(function () {  
+                $('#box').animate({
+                    left: '+=900px'
+                },1000)
+            })
+
+            // 多重动画 可以看到所有的变化都是同时进行的。
+            $('#btn').click(function () {  
+                $('#box').animate({
+                    left: 800,
+                    bottom: 100,
+                    'border-radius': '50%',
+                    backgorundColor: '#f40'
+                },3000) 
+            })
+
+            // 延迟动画 delay()方法。
+        })
+
+        // 动画队列 一组元素上的效果：
+        // 当在一个animate()方法中应用多个属性时，动画是同时发生的；
+        // 当以链式的写法应用到动画方法时，动画是按照顺序发生的。
+        // 多组元素上的动画：
+
+        // 默认情况下，几组动画是同时发生的；
+        // 当以回调形式应用动画方式时，动画按照回调顺序发生的。
+        // 如果需要在某处停止动画需要使用stop()方法。 stop([clearQueue],[gotoEnd]);
+        // 两个参数都是可选的，都为布尔值，clearQueue表示是否要清空未执行完的动画队列。
+        // gotoEnd表示的是直接将正在执行的动画跳转到末状态。直接使用stop()方法，则会立即停止当前正在执行的动画。
+    </script>
+</body>
+</html>

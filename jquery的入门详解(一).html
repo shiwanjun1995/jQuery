@@ -243,7 +243,7 @@
         $(function () {
             $("#id").css('width', '100px');
             console.log($("#id").css('width')); // 带单位
-            console.log($("#id").width()); // 设置或返回当前匹配元素的宽度 返回第一个匹配元素的宽度
+            console.log($("#id").width()); // 设置或返回当前匹配元素的宽度 返回第一个匹配元素的宽度 注意： $(window).width() 获取的是屏幕的可视区域的宽度
             $('#id').css({ // 以对象的形式设置多个样式值
                 'background-color': 'cyan',
                 fontSize: 28
