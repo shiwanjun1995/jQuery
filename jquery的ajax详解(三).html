@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>初识jQuery</title>
+    <!-- 样式部分 -->
+    <style>
+        .send {
+            margin-bottom: 10px;
+        }
+        
+        .comment {
+            width: 300px;
+            padding: 10px 0px 10px 10px;
+            background: rgba(156, 250, 220, 0.5);
+            border: 1px dashed #f45;
+            margin-bottom: 10px;
+        }
+
+        .box {
+            width: 300px;
+            height: 300px;
+            background: aquamarine;
+        }
+
+        .center {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #efefef;
+            text-align: center;
+            position: relative;
+        }
+
+        .vertical {
+            width: 50px;
+            height: 50px;
+            background-color: lime;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+        }
+    </style>
+</head>
+<body>
+    <!-- html 部分 -->
+    <input type="button" class="send" value="Ajax请求">
+    <div class="comment">已有评论：</div>
+    <div class="resText"></div>
+
+    <!-- 书写一个定位相关 -->
+    <div class="center">
+        <div class="vertical">
+            垂直居中定位
+        </div>
+    </div>
+    <div class="center">
+        <div class="vertical">
+            垂直居中定位
+        </div>
+    </div>
+    <div class="center">
+        <div class="vertical">
+            垂直居中定位
+        </div>
+    </div>
+    <div class="center">
+        <div class="vertical">
+            垂直居中定位
+        </div>
+    </div>
+    <div class="center">
+        <div class="vertical">
+            垂直居中定位
+        </div>
+    </div>
+
+    <!-- html 部分 -->
+    <input type="button" id="btn" value="点击过渡">
+    <input type="button" id="btnC" value="点击改变盒子大小">
+    <input type="button" id="btnX" value="点击改变字体颜色">
+    <div class="box">这个内部写一些文字测试自定义的插件</div>
+    <div><img src="" data-original="http://ww1.sinaimg.cn/large/9c47d583gy1fjgqik3k1kj211y0lcdji.jpg" alt="当你看不见图片的时候，你才会看到这里的字"></div>
+    <script src="./lib/jquery-1.12.4.min.js"></script>
+    <script src="./plugins/jquery.color.js"></script>
+    <script src="./plugins/jquery.lazyload.js"></script>
+    <!-- 引入自定义插件 -->
+    <script src="./plugins/jquery.setstyle.js"></script>
+    <script>
+        // Ajax全称“Asynchronous JavaScript and XML”（异步的JavaScript和XML）。它的出现揭开了无刷新更新页面的新时代。
+        // jQuery对Ajax操作进行了封装，在jQuery中$.ajax()方法属于最底层的方法，第2层是load()、$.get()和$.post()方法，第3层就是$.getScript()和$.getJSON()方法。
+        
+        // 1.载入HTML文档 load()方法是jQuery中最为简单和常用的Ajax方法，能载入远程HTML代码并插入DOM中。它的结构为：load(url[,data][,callback]);
+        $(function () {  
+            // 点击按钮，使用load方法请求data页面
+            $(".send").click(function() {
+                // 请求的页面追加到类名为resText的div中
+                $(".resText").load("data.html");
+            });
+        })
+
+        // 2.load()方法通常是用来从WEB服务器上获取静态的数据的，如果需要向服务器传递参数的话，可以使用$.get()方法和$.post()方法还有后面的$.ajax方法。
+        
+        // 3.使用GET方式来进行异步请求：$.get(url [,data] [,callback] [,type]);
+        // url	String	请求HTML页面的URL地址
+        // data（可选）	Object	发送至服务器的key/value数据，会作为字符串凭接在url的后面
+        // callback（可选）	Function	请求完成时的回调函数(只有当Response的返回状态是success的时候，才调用该函数)
+        // type （可选）	String	服务器返回内容的格式，包括xml、html、script、json、text、_default
+        // $.get()方法的回调函数只有两个参数：
+        $(function () {  
+            $.get("get.php",{useraname: "swj",age:25},function(data,textStatus){
+                // data 返回的内容，可以是XML文档、JSON文件、HTML片段等的
+                // textStatus 请求状态：success、error、notmodified、timeout 4种。
+                // data参数代表请求返回的内容，textStatus参数代表请求回来的状态，注意：只有当数据成功返回success后才被调用。
+            })
+        })
+
+        // 4.$.post()方法 它与$.get()方法的结构和使用方式都相同，不过他们之间仍有以下区别：
+        // get请求会将参数跟在URL的后面进行传递，而post请求则是作为HTTP消息的实体内容发送给Web服务器；
+        // get对传输的数据大小有限制（通常不大于2KB），而使用post方式传递数据量要比get方式大得多；
+        // get方式请求的数据会被浏览器缓存起来，因此可以通过浏览器的历史记录中读到这些数据，存在安全性问题。
+
+        // 5.$.ajax()方法
+        // url	请求的地址
+        // type	请求的方式
+        // dataType	告诉jQuery，需要按照什么格式对服务器返回的数据进行解析，默认json
+        // data	数据
+        // success	请求成功的回调函数
+        // error	请求失败的回调函数
+        // beforeSend	请求发送之前调用的函数
+        // complete	不论请求是成功还是失败的，只要请求完成就会调用
+        // timeout	设置请求超时时间
+
+        // https://www.juhe.cn/docs/api/id/39/ 天气接口
+        $(function () {  
+            $.ajax({
+                // 请求的地址
+                url: "04-data.php",
+                // 请求的方式
+                type: "get",
+                // 告诉jQuery，需要按照什么格式对服务器返回的数据进行解析，默认json
+                dataType: "json",
+                // 数据
+                data: {
+                    msg: "我是来请求数据的"
+                },
+                // 请求成功的回调函数
+                success: function(data) {
+                    console.log(data);
+                },
+                // 请求失败的回调函数
+                error: function() {
+                    console.log("失败了");
+                },
+                // 请求发送之前调用的函数
+                beforeSend: function() {
+                    console.log("请求发送之前调用的函数");
+                    // 如果返回一个false，那么就会阻止整个请求的发送
+                    // return false;
+                    // 用法：可以用作表单验证，当表单内容符合规范的时候发送ajax请求，当不符合的时候就不发送ajax请求
+                },
+                // 不论请求是成功还是失败的，只要请求完成就会调用
+                complete: function() {
+                    console.log("请求完成了");
+                },
+                // 设置请求超时时间(单位:ms)，超过这个时间后，就不会请求了
+                timeout:2000
+            });
+        })
+
+        // 6.serialize方法会将表单中所有的内容拼接成key=value&key=value这样的字符串。 serializeArray() 方法通过序列化表单值来创建对象（name 和 value）的数组。
+
+        // 7.jquery插件 https://plugins.jquery.com/
+        // animate不支持颜色的渐变，但是使用了jquery.color.js后，就可以支持颜色的渐变了。 先引入jQuery，再引入jquery.color.js
+        $(function() {
+            $('#btn').click(function() {
+                $('.box').animate({
+                    backgroundColor: "#f45f45"
+                }, 1000);
+            });
+        });
+
+        // 懒加载插件- jquery.lazyload.js
+        // 原理：懒加载也就是延迟加载。当访问一个页面的时候，先把img元素或是其他元素的背景图片路径替换成一张大小为1*1px图片的路径（这样就只需请求一次，俗称占位图），只有当图片出现在浏览器的可视区域内时，才设置图片正真的路径，让图片显示出来。这就是图片懒加载。
+        // 页面中的img元素，如果没有src属性，浏览器就不会发出请求去下载图片，只有通过javascript设置了图片路径，浏览器才会发送请求。
+        // 懒加载的原理就是先在页面中把所有的图片统一使用一张占位图进行占位，把正真的路径存在元素的“data-url”（这个名字起个自己认识好记的就行）属性里，要用的时候就取出来，再设置；
+        // 1.首先，不要将图片地址放到src属性中，而是放到其它属性(data-url)中。
+        // 2.页面加载完成后，根据scrollTop判断图片是否在用户的视野内，如果在，则将data-url属性中的值取出存放到src属性中。
+        // 3.在滚动事件中重复判断图片是否进入视野，如果进入，则将data-url属性中的值取出存放到src属性中
+
+        // 简单使用介绍： https://www.cnblogs.com/fanmiao/p/6002907.html 
+        // 下载链接地址： https://plugins.jquery.com/lazyload/
+        $(function() {
+            //使用插件
+            $("img").lazyload({
+                effect : "fadeIn" 
+            });
+        });
+
+        // jQuery UI 是一个建立在 jQuery JavaScript 库上的小部件和交互库，您可以使用它创建高度交互的 Web 应用程序。 https://jqueryui.com/download/
+
+        // 8.自定义插件 虽然网上的插件有很多，但是可能不是我们完全想要的，其中可能还穿插着其他的功能，所以我们也可以自己封装一个jQuery插件，
+        // 有三种方式为所有jQuery对象添加方法，在创建一个jQuery插件的时候，我们只需要将添加的方法保存为一个js文件，再去引用它即可。
+        // 1、$.prototype方法添加
+        $.prototype.getStyle = function () {  
+
+        }
+        // 2.$.fn.setStyle方法添加
+        $.fn.setStyle = function () {  
+
+        }
+        // 3.$.fn.extend({})方法添加  extend可以新增多个方法
+        $.fn.extend({
+            setStyle: function () {  },
+            setPosition: function () {  }
+        })
+        
+        $(function () {  
+            $('#btnC').on('click',function () {  
+                // $('.box').css('width',400)
+                // console.log($.setStyle());
+                // 注意：setStyle 是关键词 不生效!
+                $('.box').setStyl(400)
+            })
+            $('#btnX').on('click',function () {  
+                $('.box').setColor('pink')
+            })
+            var string = '  hhhh      '
+            console.log(111);
+            console.log(string);
+            // 运行代码后，文本框中第一行字符串左右两侧的空格都被删除。
+            // 第二行的字符串只有左侧的空格被删除。
+            // 第三行的字符串只有右侧的空格被删除。
+            console.log($.trim(string));
+            console.log($.leftTrim(string));
+            console.log($.rightTrim(string));
+        })
+    </script>
+</body>
+</html>
